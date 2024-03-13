@@ -22,6 +22,7 @@ sys.path.insert(1, pathlib.Path(__file__).parent.parent.parent.__str__() + "/")
 from ranking import search_similar, search_similar_by_id
 from openai_embed import embed
 from arxiv import search_by_ids, search_latest
+from open import open_pdf
 
 
 app = Flask(__name__)
@@ -72,8 +73,19 @@ def similar():
     print(f"Received id: {id}  Search for similar papers...")
     ids, distances = search_similar_by_id(id, topk)
     papers = search_by_ids(ids)
-
     return jsonify(papers)
+
+
+@app.route("/open", methods=["POST"])
+def open():
+    """
+    Open the paper in the browser.
+    """
+    id = request.json["id"]
+    # open the paper locally using the default pdf reader
+    # 0: success, 1: fail
+    status = open_pdf(id)
+    return jsonify({"status": status})
 
 
 # embed query and search similar vectors in milvus

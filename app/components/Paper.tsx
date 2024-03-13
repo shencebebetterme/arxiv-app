@@ -1,6 +1,9 @@
+"use client";
+
 import styles from "./Paper.module.css";
 import MathReactKatex from "./MathReactKatex";
 import MathKatex from "./MathKatex";
+import { Config } from "@/app/components/Config";
 
 export interface PaperProps {
   id: string;
@@ -18,6 +21,7 @@ function parse_id(id: string) {
 
 const handleOpen = async (id: string) => {
   // Fetch data from the server
+  console.log("open ", id);
   const response = await fetch("/open", {
     method: "POST",
     headers: {
@@ -25,7 +29,6 @@ const handleOpen = async (id: string) => {
     },
     body: JSON.stringify({ id: id }),
   });
-  const data = await response.json();
 };
 
 function Paper({ id, title, authors, abstract, tags }: PaperProps) {
@@ -47,11 +50,13 @@ function Paper({ id, title, authors, abstract, tags }: PaperProps) {
           {id}
         </a>
         <span className="px-2 text-sky-700">|</span>
-        <span
-          className="btn btn-xs btn-outline btn-secondary"
-          onClick={() => handleOpen(id)}
-        >
-          open
+        <span>
+          <a
+            className="btn btn-xs btn-outline btn-secondary"
+            onClick={() => handleOpen(id)}
+          >
+            open
+          </a>
         </span>
         <span className="px-2 text-sky-700">|</span>
         <span className="text-sky-700">{tags}</span>
@@ -61,9 +66,6 @@ function Paper({ id, title, authors, abstract, tags }: PaperProps) {
         {/* {abstract} */}
       </div>
       <div className="showSimilar">
-        {/* <a href={`/similar/${id}`} target="_blank">
-          Show similar papers
-        </a> */}
         <a
           href={`/similar/${parsed_id}`}
           target="_blank"
